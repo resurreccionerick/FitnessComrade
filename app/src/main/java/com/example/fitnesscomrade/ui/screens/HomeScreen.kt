@@ -1,15 +1,15 @@
 package com.example.fitnesscomrade.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,78 +21,88 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.fitnesscomrade.R
+import com.example.fitnesscomrade.constants.BottomNavItem
 
-@Preview
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
+    val navController = rememberNavController()
+    var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Home) }
+
     Scaffold(
         topBar = {
-//            TopAppBar(
-//                title = { },
-//                modifier = Modifier.padding(1.dp)
-//            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 25.dp)
-                .background(Color.White), // Background color to make sure it matches the app theme
-            verticalArrangement = Arrangement.Top, // Align items to the top
-            horizontalAlignment = Alignment.CenterHorizontally // Center items horizontally
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(65.dp)
-                        .clip(CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.sample_pic),
-                        contentDescription = "profile pic"
-                    )
-                }
-
-                Text(buildAnnotatedString {
-                    append("Hello, ")
-                    withStyle(
-                        SpanStyle(
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                    ) {
-                        append("User")
+            TopAppBar(
+                title = {
+                    Text(buildAnnotatedString {
+                        append("Hello, ")
+                        withStyle(
+                            SpanStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        ) {
+                            append("User")
+                        }
+                    })
+                },
+                actions = {
+                    IconButton(onClick = { /* Handle action icon click */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Favorite Icon")
                     }
-                }, modifier = Modifier.padding(start = 10.dp))
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                BadgedBox(badge = {
-                    Badge(
-                        Modifier
-                            .clip(CircleShape)
-                            .background(Color.Red)
-                            .align(Alignment.BottomEnd)
-                    )
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
-                        contentDescription = "notification icon",
-                        tint = Color.Black
-                    )
+                    IconButton(onClick = { /* Handle action icon click */ }) {
+                        Icon(Icons.Filled.Search, contentDescription = "Search Icon")
+                    }
+                    IconButton(onClick = { /* Handle action icon click */ }) {
+                        Icon(Icons.Filled.Notifications, contentDescription = "Notifications Icon")
+                    }
+                    IconButton(onClick = { /* Handle action icon click */ }) {
+                        Image(
+                            painter = painterResource(id = R.drawable.sample_pic),
+                            contentDescription = "Profile Picture",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                        )
+                    }
                 }
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(selectedItem = selectedItem) { item ->
+                selectedItem = item
+                navController.navigate(item.route)
             }
         }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = BottomNavItem.Home.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(BottomNavItem.Home.route) { HomeScreenContent() }
+            composable(BottomNavItem.Profile.route) { ProfileScreenContent() }
+        }
     }
+}
+
+@Composable
+fun HomeScreenContent() {
+    Text(text = "Home Screen")
+}
+
+@Composable
+fun ProfileScreenContent() {
+    Text(text = "Profile Screen")
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen()
 }

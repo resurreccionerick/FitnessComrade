@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.example.fitnesscomrade.ui.screens.HomeScreen
+
 import com.example.fitnesscomrade.ui.screens.SplashScreen
 import com.example.fitnesscomrade.ui.theme.FitnessComradeTheme
 import kotlinx.coroutines.delay
